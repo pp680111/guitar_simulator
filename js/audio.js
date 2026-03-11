@@ -104,40 +104,6 @@ class AudioEngine {
             76: { note: 'D#3', freq: 155.56 },
             77: { note: 'E3', freq: 164.81 }
         };
-
-        // Tone presets
-        this.tonePresets = {
-            nylon: {
-                type: 'pluck',
-                attack: 0.001,
-                release: 2,
-                freq: 220
-            },
-            steel: {
-                type: 'pluck',
-                attack: 0.001,
-                release: 3,
-                freq: 440
-            },
-            electric: {
-                type: 'sine',
-                attack: 0.01,
-                decay: 0.1,
-                sustain: 0.3,
-                release: 0.5
-            },
-            synth: {
-                oscillator: {
-                    type: 'triangle'
-                },
-                envelope: {
-                    attack: 0.02,
-                    decay: 0.3,
-                    sustain: 0.4,
-                    release: 0.8
-                }
-            }
-        };
     }
 
     /**
@@ -423,7 +389,7 @@ class AudioEngine {
      * @param {string} tone - Tone type (nylon, steel, electric, synth)
      */
     setTone(tone) {
-        if (!this.tonePresets[tone]) {
+        if (!this.synths[tone]) {
             console.warn(`Unknown tone: ${tone}`);
             return;
         }

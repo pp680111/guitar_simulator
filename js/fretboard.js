@@ -305,44 +305,6 @@ class Fretboard {
     }
 
     /**
-     * Apply custom styling from image
-     * @param {object} colors - Color scheme
-     */
-    applyStyle(colors) {
-        if (!colors) return;
-
-        const root = document.documentElement;
-
-        if (colors.fretboard) {
-            root.style.setProperty('--fretboard-bg', colors.fretboard);
-        }
-        if (colors.fretWire) {
-            root.style.setProperty('--fret-wire', colors.fretWire);
-        }
-        if (colors.string) {
-            root.style.setProperty('--string-color', colors.string);
-        }
-        if (colors.marker) {
-            root.style.setProperty('--fret-marker', colors.marker);
-        }
-        if (colors.note) {
-            root.style.setProperty('--note-default', colors.note);
-        }
-    }
-
-    /**
-     * Reset styling to default
-     */
-    resetStyle() {
-        const root = document.documentElement;
-        root.style.setProperty('--fretboard-bg', '#2a1810');
-        root.style.setProperty('--fret-wire', '#c0c0c0');
-        root.style.setProperty('--string-color', '#e8dcc8');
-        root.style.setProperty('--fret-marker', '#d4af37');
-        root.style.setProperty('--note-default', '#FFD700');
-    }
-
-    /**
      * Scroll to a specific fret
      * @param {number} fret - Fret number
      */
