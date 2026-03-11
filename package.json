@@ -1,0 +1,20 @@
+{
+  "name": "guitar_sim",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "spessasynth_core": "^4.1.5",
+    "spessasynth_lib": "^4.1.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.3"
+  }
+}
