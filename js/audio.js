@@ -17,9 +17,10 @@ class AudioEngine {
         this.currentInstrument = 'acoustic_guitar_nylon';
 
         // Note frequencies for guitar (standard tuning)
+        // Using formula: noteIndex = string * 25 + fret (0-24 frets per string)
         // String 0 = highest pitch (E4), String 5 = lowest pitch (E2)
         this.notes = {
-            // String 1 (E4) - highest pitch, displayed at top (indices 0-12)
+            // String 0 (E4) - highest pitch, indices 0-24
             0: { note: 'E4', freq: 329.63 },
             1: { note: 'F4', freq: 349.23 },
             2: { note: 'F#4', freq: 369.99 },
@@ -33,76 +34,182 @@ class AudioEngine {
             10: { note: 'D5', freq: 587.33 },
             11: { note: 'D#5', freq: 622.25 },
             12: { note: 'E5', freq: 659.25 },
-            // String 2 (B3) - indices 13-25
-            13: { note: 'B3', freq: 246.94 },
-            14: { note: 'C4', freq: 261.63 },
-            15: { note: 'C#4', freq: 277.18 },
-            16: { note: 'D4', freq: 293.66 },
-            17: { note: 'D#4', freq: 311.13 },
-            18: { note: 'E4', freq: 329.63 },
-            19: { note: 'F4', freq: 349.23 },
-            20: { note: 'F#4', freq: 369.99 },
-            21: { note: 'G4', freq: 392.00 },
-            22: { note: 'G#4', freq: 415.30 },
-            23: { note: 'A4', freq: 440.00 },
-            24: { note: 'A#4', freq: 466.16 },
-            25: { note: 'B4', freq: 493.88 },
-            // String 3 (G3) - indices 26-38
-            26: { note: 'G3', freq: 196.00 },
-            27: { note: 'G#3', freq: 207.65 },
-            28: { note: 'A3', freq: 220.00 },
-            29: { note: 'A#3', freq: 233.08 },
-            30: { note: 'B3', freq: 246.94 },
-            31: { note: 'C4', freq: 261.63 },
-            32: { note: 'C#4', freq: 277.18 },
-            33: { note: 'D4', freq: 293.66 },
-            34: { note: 'D#4', freq: 311.13 },
-            35: { note: 'E4', freq: 329.63 },
-            36: { note: 'F4', freq: 349.23 },
-            37: { note: 'F#4', freq: 369.99 },
-            38: { note: 'G4', freq: 392.00 },
-            // String 4 (D3) - indices 39-51
-            39: { note: 'D3', freq: 146.83 },
-            40: { note: 'D#3', freq: 155.56 },
-            41: { note: 'E3', freq: 164.81 },
-            42: { note: 'F3', freq: 174.61 },
-            43: { note: 'F#3', freq: 185.00 },
-            44: { note: 'G3', freq: 196.00 },
-            45: { note: 'G#3', freq: 207.65 },
-            46: { note: 'A3', freq: 220.00 },
-            47: { note: 'A#3', freq: 233.08 },
-            48: { note: 'B3', freq: 246.94 },
-            49: { note: 'C4', freq: 261.63 },
-            50: { note: 'C#4', freq: 277.18 },
-            51: { note: 'D4', freq: 293.66 },
-            // String 5 (A2) - indices 52-64
-            52: { note: 'A2', freq: 110.00 },
-            53: { note: 'A#2', freq: 116.54 },
-            54: { note: 'B2', freq: 123.47 },
-            55: { note: 'C3', freq: 130.81 },
-            56: { note: 'C#3', freq: 138.59 },
-            57: { note: 'D3', freq: 146.83 },
-            58: { note: 'D#3', freq: 155.56 },
-            59: { note: 'E3', freq: 164.81 },
-            60: { note: 'F3', freq: 174.61 },
-            61: { note: 'F#3', freq: 185.00 },
-            62: { note: 'G3', freq: 196.00 },
-            63: { note: 'G#3', freq: 207.65 },
-            64: { note: 'A3', freq: 220.00 },
-            // String 6 (E2) - lowest pitch, displayed at bottom (indices 65-77)
-            65: { note: 'E2', freq: 82.41 },
-            66: { note: 'F2', freq: 87.31 },
-            67: { note: 'F#2', freq: 92.50 },
-            68: { note: 'G2', freq: 98.00 },
-            69: { note: 'G#2', freq: 103.83 },
-            70: { note: 'A2', freq: 110.00 },
-            71: { note: 'A#2', freq: 116.54 },
-            72: { note: 'B2', freq: 123.47 },
-            73: { note: 'C3', freq: 130.81 },
-            74: { note: 'C#3', freq: 138.59 },
+            13: { note: 'F5', freq: 698.46 },
+            14: { note: 'F#5', freq: 739.99 },
+            15: { note: 'G5', freq: 783.99 },
+            16: { note: 'G#5', freq: 830.61 },
+            17: { note: 'A5', freq: 880.00 },
+            18: { note: 'A#5', freq: 932.33 },
+            19: { note: 'B5', freq: 987.77 },
+            20: { note: 'C6', freq: 1046.50 },
+            21: { note: 'C#6', freq: 1108.73 },
+            22: { note: 'D6', freq: 1174.66 },
+            23: { note: 'D#6', freq: 1244.51 },
+            24: { note: 'E6', freq: 1318.51 },
+            // String 1 (B3), indices 25-49
+            25: { note: 'B3', freq: 246.94 },
+            26: { note: 'C4', freq: 261.63 },
+            27: { note: 'C#4', freq: 277.18 },
+            28: { note: 'D4', freq: 293.66 },
+            29: { note: 'D#4', freq: 311.13 },
+            30: { note: 'E4', freq: 329.63 },
+            31: { note: 'F4', freq: 349.23 },
+            32: { note: 'F#4', freq: 369.99 },
+            33: { note: 'G4', freq: 392.00 },
+            34: { note: 'G#4', freq: 415.30 },
+            35: { note: 'A4', freq: 440.00 },
+            36: { note: 'A#4', freq: 466.16 },
+            37: { note: 'B4', freq: 493.88 },
+            38: { note: 'C5', freq: 523.25 },
+            39: { note: 'C#5', freq: 554.37 },
+            40: { note: 'D5', freq: 587.33 },
+            41: { note: 'D#5', freq: 622.25 },
+            42: { note: 'E5', freq: 659.25 },
+            43: { note: 'F5', freq: 698.46 },
+            44: { note: 'F#5', freq: 739.99 },
+            45: { note: 'G5', freq: 783.99 },
+            46: { note: 'G#5', freq: 830.61 },
+            47: { note: 'A5', freq: 880.00 },
+            48: { note: 'B5', freq: 987.77 },
+            49: { note: 'C6', freq: 1046.50 },
+            // String 2 (G3), indices 50-74
+            50: { note: 'G3', freq: 196.00 },
+            51: { note: 'G#3', freq: 207.65 },
+            52: { note: 'A3', freq: 220.00 },
+            53: { note: 'A#3', freq: 233.08 },
+            54: { note: 'B3', freq: 246.94 },
+            55: { note: 'C4', freq: 261.63 },
+            56: { note: 'C#4', freq: 277.18 },
+            57: { note: 'D4', freq: 293.66 },
+            58: { note: 'D#4', freq: 311.13 },
+            59: { note: 'E4', freq: 329.63 },
+            60: { note: 'F4', freq: 349.23 },
+            61: { note: 'F#4', freq: 369.99 },
+            62: { note: 'G4', freq: 392.00 },
+            63: { note: 'G#4', freq: 415.30 },
+            64: { note: 'A4', freq: 440.00 },
+            65: { note: 'A#4', freq: 466.16 },
+            66: { note: 'B4', freq: 493.88 },
+            67: { note: 'C5', freq: 523.25 },
+            68: { note: 'C#5', freq: 554.37 },
+            69: { note: 'D5', freq: 587.33 },
+            70: { note: 'D#5', freq: 622.25 },
+            71: { note: 'E5', freq: 659.25 },
+            72: { note: 'F5', freq: 698.46 },
+            73: { note: 'G5', freq: 783.99 },
+            74: { note: 'A5', freq: 880.00 },
+            // String 3 (D3), indices 75-99
             75: { note: 'D3', freq: 146.83 },
             76: { note: 'D#3', freq: 155.56 },
-            77: { note: 'E3', freq: 164.81 }
+            77: { note: 'E3', freq: 164.81 },
+            78: { note: 'F3', freq: 174.61 },
+            79: { note: 'F#3', freq: 185.00 },
+            80: { note: 'G3', freq: 196.00 },
+            81: { note: 'G#3', freq: 207.65 },
+            82: { note: 'A3', freq: 220.00 },
+            83: { note: 'A#3', freq: 233.08 },
+            84: { note: 'B3', freq: 246.94 },
+            85: { note: 'C4', freq: 261.63 },
+            86: { note: 'C#4', freq: 277.18 },
+            87: { note: 'D4', freq: 293.66 },
+            88: { note: 'D#4', freq: 311.13 },
+            89: { note: 'E4', freq: 329.63 },
+            90: { note: 'F4', freq: 349.23 },
+            91: { note: 'F#4', freq: 369.99 },
+            92: { note: 'G4', freq: 392.00 },
+            93: { note: 'G#4', freq: 415.30 },
+            94: { note: 'A4', freq: 440.00 },
+            95: { note: 'B4', freq: 493.88 },
+            96: { note: 'C5', freq: 523.25 },
+            97: { note: 'D5', freq: 587.33 },
+            98: { note: 'E5', freq: 659.25 },
+            99: { note: 'F5', freq: 698.46 },
+            // String 4 (A2), indices 100-124
+            100: { note: 'A2', freq: 110.00 },
+            101: { note: 'A#2', freq: 116.54 },
+            102: { note: 'B2', freq: 123.47 },
+            103: { note: 'C3', freq: 130.81 },
+            104: { note: 'C#3', freq: 138.59 },
+            105: { note: 'D3', freq: 146.83 },
+            106: { note: 'D#3', freq: 155.56 },
+            107: { note: 'E3', freq: 164.81 },
+            108: { note: 'F3', freq: 174.61 },
+            109: { note: 'F#3', freq: 185.00 },
+            110: { note: 'G3', freq: 196.00 },
+            111: { note: 'G#3', freq: 207.65 },
+            112: { note: 'A3', freq: 220.00 },
+            113: { note: 'A#3', freq: 233.08 },
+            114: { note: 'B3', freq: 246.94 },
+            115: { note: 'C4', freq: 261.63 },
+            116: { note: 'D4', freq: 293.66 },
+            117: { note: 'E4', freq: 329.63 },
+            118: { note: 'F4', freq: 349.23 },
+            119: { note: 'G4', freq: 392.00 },
+            120: { note: 'A4', freq: 440.00 },
+            121: { note: 'B4', freq: 493.88 },
+            122: { note: 'C5', freq: 523.25 },
+            123: { note: 'D5', freq: 587.33 },
+            124: { note: 'E5', freq: 659.25 },
+            // String 5 (E2) - lowest pitch, indices 125-149
+            125: { note: 'E2', freq: 82.41 },
+            126: { note: 'F2', freq: 87.31 },
+            127: { note: 'F#2', freq: 92.50 },
+            128: { note: 'G2', freq: 98.00 },
+            129: { note: 'G#2', freq: 103.83 },
+            130: { note: 'A2', freq: 110.00 },
+            131: { note: 'A#2', freq: 116.54 },
+            132: { note: 'B2', freq: 123.47 },
+            133: { note: 'C3', freq: 130.81 },
+            134: { note: 'C#3', freq: 138.59 },
+            135: { note: 'D3', freq: 146.83 },
+            136: { note: 'D#3', freq: 155.56 },
+            137: { note: 'E3', freq: 164.81 },
+            138: { note: 'F3', freq: 174.61 },
+            139: { note: 'F#3', freq: 185.00 },
+            140: { note: 'G3', freq: 196.00 },
+            141: { note: 'G#3', freq: 207.65 },
+            142: { note: 'A3', freq: 220.00 },
+            143: { note: 'A#3', freq: 233.08 },
+            144: { note: 'B3', freq: 246.94 },
+            145: { note: 'C4', freq: 261.63 },
+            146: { note: 'D4', freq: 293.66 },
+            147: { note: 'E4', freq: 329.63 },
+            148: { note: 'F4', freq: 349.23 },
+            149: { note: 'G4', freq: 392.00 }
+        };
+
+        // Tone presets
+        this.tonePresets = {
+            nylon: {
+                type: 'pluck',
+                attack: 0.001,
+                release: 2,
+                freq: 220
+            },
+            steel: {
+                type: 'pluck',
+                attack: 0.001,
+                release: 3,
+                freq: 440
+            },
+            electric: {
+                type: 'sine',
+                attack: 0.01,
+                decay: 0.1,
+                sustain: 0.3,
+                release: 0.5
+            },
+            synth: {
+                oscillator: {
+                    type: 'triangle'
+                },
+                envelope: {
+                    attack: 0.02,
+                    decay: 0.3,
+                    sustain: 0.4,
+                    release: 0.8
+                }
+            }
         };
     }
 
@@ -340,7 +447,7 @@ class AudioEngine {
             }
         }
 
-        const noteIndex = string * 13 + fret;
+        const noteIndex = string * 25 + fret;
         const noteData = this.notes[noteIndex];
 
         if (!noteData) {
@@ -389,7 +496,7 @@ class AudioEngine {
      * @param {string} tone - Tone type (nylon, steel, electric, synth)
      */
     setTone(tone) {
-        if (!this.synths[tone]) {
+        if (!this.tonePresets[tone]) {
             console.warn(`Unknown tone: ${tone}`);
             return;
         }
@@ -424,7 +531,7 @@ class AudioEngine {
      * @returns {object} Note data
      */
     getNote(string, fret) {
-        const noteIndex = string * 13 + fret;
+        const noteIndex = string * 25 + fret;
         return this.notes[noteIndex] || null;
     }
 

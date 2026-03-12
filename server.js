@@ -22,7 +22,7 @@ const mimeTypes = {
 
 const server = http.createServer((req, res) => {
     // Parse URL and remove query string
-    const urlPath = req.url.split('?')[0];
+    let urlPath = req.url.split('?')[0];
 
     let filePath = path.join(__dirname, urlPath === '/' ? 'index.html' : urlPath);
 

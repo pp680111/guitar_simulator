@@ -23,6 +23,7 @@ class ChordData {
             'Dm': { name: 'Dm', fingers: '1-2-3', positions: [-1, -1, 0, 2, 3, 1] },
             'Em': { name: 'Em', fingers: '1-2', positions: [0, 2, 2, 0, 0, 0] },
             'Gm': { name: 'Gm', fingers: '1-2-3', positions: [3, 5, 5, 3, 3, 3] },
+            'Bm': { name: 'Bm', fingers: '1-2-4', positions: [-1, 2, 4, 4, 3, 2] },
 
             // 7th chords
             'C7': { name: 'C7', fingers: '1-2-3', positions: [-1, 3, 2, 3, 1, 0] },
