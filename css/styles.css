@@ -25,7 +25,6 @@
     /* Note colors */
     --note-default: rgba(255, 255, 255, 0.9);
     --note-active: #f0c040;
-    --note-chord: #4CAF50;
 
     /* Effects */
     --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
@@ -404,56 +403,72 @@ body {
     text-align: center;
 }
 
-/* Fret position (note) - matching reference with circles showing note letters */
+/* Fret position (note) - rectangular hit area */
 .fret-position {
     position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
+    left: 10px;
+    right: 10px;
+    top: 0;
+    bottom: 0;
     background: transparent;
-    border: 1.5px solid rgba(255,255,255,0.25);
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: rgba(255,255,255,0.4);
     cursor: pointer;
     transition: var(--transition-fast);
     z-index: 1;
 }
 
-.fret-position:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.5);
+/* Hit area - covers each fret segment with padding around the string */
+.fret-hit-area {
+    position: absolute;
+    left: 0;
+    right: 0;
+    cursor: pointer;
+    z-index: 5;
 }
 
-.fret-position.active {
+/* String-specific hit areas - positioned to cover each string's fret segment */
+.fret-hit-area[data-string="0"] {
+    top: 0;
+    height: calc(100% / 6);
+}
+
+.fret-hit-area[data-string="1"] {
+    top: calc(100% / 6);
+    height: calc(100% / 6);
+}
+
+.fret-hit-area[data-string="2"] {
+    top: calc(100% / 6 * 2);
+    height: calc(100% / 6);
+}
+
+.fret-hit-area[data-string="3"] {
+    top: calc(100% / 6 * 3);
+    height: calc(100% / 6);
+}
+
+.fret-hit-area[data-string="4"] {
+    top: calc(100% / 6 * 4);
+    height: calc(100% / 6);
+}
+
+.fret-hit-area[data-string="5"] {
+    top: calc(100% / 6 * 5);
+    height: calc(100% / 6);
+}
+
+/* Hover effect */
+.fret-hit-area:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+/* Active/playing state */
+.fret-hit-area.active {
     background: var(--note-active);
-    border-color: var(--note-active);
-    color: #1a120c;
-    box-shadow: 0 0 12px var(--note-active);
-    animation: notePulse 0.25s ease;
-}
-
-.fret-position.chord {
-    background: var(--note-chord);
-    border-color: var(--note-chord);
-    color: white;
-}
-
-.fret-position.muted {
-    background: var(--error-color);
-    border-color: var(--error-color);
-    color: white;
-}
-
-@keyframes notePulse {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.15); }
-    100% { transform: translate(-50%, -50%) scale(1); }
+    box-shadow: 0 0 10px var(--note-active);
 }
 
 /* Fretboard info */
@@ -833,12 +848,6 @@ body {
         padding: 1rem 0.5rem;
     }
 
-    .fret-position {
-        width: 22px;
-        height: 22px;
-        font-size: 0.5rem;
-    }
-
     .string-label {
         left: -1rem;
         font-size: 0.55rem;
@@ -876,12 +885,6 @@ body {
         display: none;
     }
 
-    .fret-position {
-        width: 20px;
-        height: 20px;
-        font-size: 0.45rem;
-    }
-
     .chord-btn {
         min-width: 34px;
         height: 28px;
@@ -895,11 +898,6 @@ body {
 
 /* Touch optimization */
 @media (pointer: coarse) {
-    .fret-position {
-        min-width: 30px;
-        min-height: 30px;
-    }
-
     .chord-btn {
         min-width: 40px;
         min-height: 36px;

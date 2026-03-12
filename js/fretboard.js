@@ -68,6 +68,29 @@ class Fretboard {
 
         fretDiv.appendChild(stringsContainer);
 
+        // Create clickable areas for each string position
+        for (let string = 0; string < this.numStrings; string++) {
+            const hitArea = document.createElement('div');
+            hitArea.className = 'fret-hit-area';
+            hitArea.dataset.string = string;
+            hitArea.dataset.fret = fret;
+
+            // Add mousedown handler
+            hitArea.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                this.handleNoteClick(string, fret);
+            });
+
+            // Add touchstart handler
+            hitArea.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleNoteClick(string, fret);
+            }, { passive: false });
+
+            fretDiv.appendChild(hitArea);
+        }
+
         // Add fret markers (not for first fret)
         if (fret > 0 && this.markerFrets.includes(fret)) {
             const isDouble = this.doubleMarkerFrets.includes(fret);
@@ -124,25 +147,16 @@ class Fretboard {
         stringDiv.className = 'guitar-string';
         stringDiv.dataset.string = string;
 
-        // String line
+        // String line (the visible guitar string)
         const line = document.createElement('div');
         line.className = 'string-line';
         stringDiv.appendChild(line);
 
-        // Fret position (note)
+        // Fret position (clickable area)
         const position = document.createElement('div');
         position.className = 'fret-position';
         position.dataset.string = string;
         position.dataset.fret = fret;
-
-        // Calculate position within fret
-        const offset = (fret === 0) ? 15 : 20;
-        position.style.left = `${offset}px`;
-
-        // Add note name for open strings
-        if (fret === 0) {
-            position.textContent = this.getOpenStringNote(string);
-        }
 
         // Add mousedown handler for immediate response on desktop
         position.addEventListener('mousedown', (e) => {
@@ -203,14 +217,14 @@ class Fretboard {
      * @param {number} fret - Fret number
      */
     showNoteAnimation(string, fret) {
-        const position = this.fretboard.querySelector(
-            `.fret[data-fret="${fret}"] .fret-position[data-string="${string}"]`
+        const hitArea = this.fretboard.querySelector(
+            `.fret[data-fret="${fret}"] .fret-hit-area[data-string="${string}"]`
         );
 
-        if (position) {
-            position.classList.add('active');
+        if (hitArea) {
+            hitArea.classList.add('active');
             setTimeout(() => {
-                position.classList.remove('active');
+                hitArea.classList.remove('active');
             }, 300);
         }
     }
@@ -234,7 +248,7 @@ class Fretboard {
      * Clear all active notes
      */
     clearActiveNotes() {
-        const positions = this.fretboard.querySelectorAll('.fret-position.active');
+        const positions = this.fretboard.querySelectorAll('.fret-hit-area.active');
         positions.forEach(pos => {
             pos.classList.remove('active');
         });
