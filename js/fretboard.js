@@ -14,8 +14,6 @@ class Fretboard {
         this.markerFrets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
         this.doubleMarkerFrets = [12, 24];
 
-        // Current chord being displayed
-        this.currentChord = null;
         this.activeNotes = [];
 
         // Bind methods
@@ -230,68 +228,6 @@ class Fretboard {
                 noteDisplay.textContent = `弦${string + 1} - 品${fret} - ${noteData.note} (${noteData.freq.toFixed(1)} Hz)`;
             }
         }
-    }
-
-    /**
-     * Display a chord on the fretboard
-     * @param {string} chordName - Chord name
-     */
-    displayChord(chordName) {
-        // Clear previous chord
-        this.clearChord();
-
-        if (!chordName || !window.chordData) return;
-
-        const positions = window.chordData.getPositions(chordName);
-        if (!positions) return;
-
-        this.currentChord = chordName;
-
-        // Mark each position
-        for (let string = 0; string < this.numStrings; string++) {
-            const fret = positions[string];
-
-            // Find the fret position element
-            let positionEl;
-            if (fret === 0) {
-                // Open string
-                positionEl = this.fretboard.querySelector(
-                    `.fret[data-fret="0"] .fret-position[data-string="${string}"]`
-                );
-            } else if (fret > 0) {
-                // Fretted note
-                positionEl = this.fretboard.querySelector(
-                    `.fret[data-fret="${fret}"] .fret-position[data-string="${string}"]`
-                );
-            }
-
-            if (positionEl) {
-                if (fret === -1) {
-                    // Muted string
-                    positionEl.classList.add('muted');
-                } else if (fret === 0) {
-                    // Open string
-                    positionEl.classList.add('chord');
-                } else {
-                    // Fretted note
-                    positionEl.classList.add('chord');
-                }
-            }
-        }
-    }
-
-    /**
-     * Clear chord display
-     */
-    clearChord() {
-        if (!this.fretboard) return;
-
-        const positions = this.fretboard.querySelectorAll('.fret-position');
-        positions.forEach(pos => {
-            pos.classList.remove('chord', 'muted');
-        });
-
-        this.currentChord = null;
     }
 
     /**
